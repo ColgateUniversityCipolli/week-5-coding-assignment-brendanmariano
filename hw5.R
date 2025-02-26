@@ -4,17 +4,11 @@ library(tidyverse)
 #Cleaning and beginning to summarize song data using tidyverse
 
 
-all.song.files = list.files(path = "EssentiaOutput", full.names = TRUE, recursive = TRUE)
-cnt.withjson = str_count(all.song.files,".json") 
-all.song.filesj = all.song.files[which(cnt.withjson == 1)]
-# all.song.files = list.files(path = "EssentiaOutput", full.names = TRUE, recursive = TRUE)
+all.song.files = tibble(filepath = list.files(path = "EssentiaOutput", full.names = TRUE, recursive = TRUE)) |>
+  mutate(count = str_count(filepath, ".json")) |>
+  filter(count == 1) |>
+  pull(filepath)
 
-#CODE EXPERIMENTING WITH MUTATE
-
-# all.song.filesj = list.files(path = "EssentiaOutput", full.names = TRUE, recursive = TRUE) |>
-#     filterstr_count(".json") |>
-    
-  
 #Data frame to be added to
 total_data = tibble(artist = character(), 
                     album = character(), 
@@ -67,9 +61,9 @@ allNewVals = tibble(avg.valence = c(),
 csvFile = read_csv("EssentiaOutput/EssentiaModelOutput.csv")
 i = 1
 #Cycles through each of the 181 song files (Goes through in order)
-for(ind in 1:length(all.song.filesj))
+for(ind in 1:length(all.song.files))
 {
-  current.filename= all.song.filesj[ind] 
+  current.filename= all.song.files[ind] 
 
   #Contains track info
   song.info = fromJSON(current.filename)
@@ -110,11 +104,7 @@ for(ind in 1:length(all.song.filesj))
     #5 Finds instrumental
     mutate(instrumental = mean(csvFile$eff_instrumental[i] + csvFile$nn_instrumental[i], na.rm = TRUE))
 
-  #6 Changes name of timbre column
-  #NEED TO FIX
-  colnames(csvFile)[colnames(csvFile) == "eff_timbre_bright"] = "timbreBright"
-     # csvFile = csvFile |>
-     # rename(timbreBright = contains(.,eff_timbre_bright))
+
   #2. 
   #Appends new_data to total_data (new_data is a row)
   #This stores
@@ -125,6 +115,11 @@ for(ind in 1:length(all.song.filesj))
     bind_rows(newCols)
   i = i + 1
 }
+
+#6 Changes name of timbre column
+csvFile = csvFile |>
+  rename(timbreBright = eff_timbre_bright)
+
 #Combines the allNewVals data frame with existing csv File
 for(column.ind in 1:ncol(allNewVals))
 {
