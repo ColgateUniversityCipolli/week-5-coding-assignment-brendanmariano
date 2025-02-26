@@ -90,19 +90,19 @@ for(ind in 1:length(all.song.files))
   #Step 3:
   #2 
   newCols = newCols |>
-    mutate(avg.valence = mean(csvFile$deam_valence[i] + csvFile$emo_valence[i] + csvFile$muse_valence[i], na.rm = TRUE)) |>
-    mutate(avg.arousal = mean(csvFile$deam_arousal[i] + csvFile$emo_arousal[i] + csvFile$muse_arousal[i], na.rm = TRUE)) |>
+    mutate(avg.valence = mean(c(csvFile$deam_valence[i], csvFile$emo_valence[i], csvFile$muse_valence[i]), na.rm = TRUE)) |>
+    mutate(avg.arousal = mean(c(csvFile$deam_arousal[i], csvFile$emo_arousal[i], csvFile$muse_arousal[i]), na.rm = TRUE)) |>
     #3. Finds aggressive, happy, party, relaxed, and sad
-    mutate(aggressive = mean(csvFile$eff_aggressive[i] + csvFile$nn_aggressive[i], na.rm = TRUE)) |>
-    mutate(happy = mean(csvFile$eff_happy[i] + csvFile$nn_happy[i], na.rm = TRUE)) |>
-    mutate(party = mean(csvFile$eff_party[i] + csvFile$nn_party[i], na.rm = TRUE)) |>
-    mutate(relaxed = mean(csvFile$eff_relax[i] + csvFile$nn_relax[i], na.rm = TRUE)) |>
-    mutate(sad = mean(csvFile$eff_sad[i] + csvFile$nn_sad[i], na.rm = TRUE)) |>
+    mutate(aggressive = mean(c(csvFile$eff_aggressive[i], csvFile$nn_aggressive[i]), na.rm = TRUE)) |>
+    mutate(happy = mean(c(csvFile$eff_happy[i], csvFile$nn_happy[i]), na.rm = TRUE)) |>
+    mutate(party = mean(c(csvFile$eff_party[i], csvFile$nn_party[i]), na.rm = TRUE)) |>
+    mutate(relaxed = mean(c(csvFile$eff_relax[i], csvFile$nn_relax[i]), na.rm = TRUE)) |>
+    mutate(sad = mean(c(csvFile$eff_sad[i], csvFile$nn_sad[i], na.rm = TRUE))) |>
     #4 Finds Acoustic and Electric
-    mutate(acoustic = mean(csvFile$eff_acoustic[i] + csvFile$nn_acoustic[i], na.rm = TRUE)) |>
-    mutate(electric = mean(csvFile$eff_electronic[i] + csvFile$nn_electronic[i], na.rm = TRUE)) |>
+    mutate(acoustic = mean(c(csvFile$eff_acoustic[i], csvFile$nn_acoustic[i]), na.rm = TRUE)) |>
+    mutate(electric = mean(c(csvFile$eff_electronic[i], csvFile$nn_electronic[i]), na.rm = TRUE)) |>
     #5 Finds instrumental
-    mutate(instrumental = mean(csvFile$eff_instrumental[i] + csvFile$nn_instrumental[i], na.rm = TRUE))
+    mutate(instrumental = mean(c(csvFile$eff_instrumental[i], csvFile$nn_instrumental[i]), na.rm = TRUE))
 
 
   #2. 
